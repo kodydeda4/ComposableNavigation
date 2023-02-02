@@ -12,6 +12,11 @@
 		33A7D7D0298C76FB000CF334 /* Sports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A7D7CF298C76FB000CF334 /* Sports.swift */; };
 		33A7D7D2298C7704000CF334 /* Activities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A7D7D1298C7704000CF334 /* Activities.swift */; };
 		33A7D7D4298C771B000CF334 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A7D7D3298C771B000CF334 /* Settings.swift */; };
+		33A7D7D6298C7AC5000CF334 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A7D7D5298C7AC5000CF334 /* Profile.swift */; };
+		33A7D7DB298C7B5E000CF334 /* AuthClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A7D7DA298C7B5E000CF334 /* AuthClient.swift */; };
+		33A7D7DD298C7B83000CF334 /* AuthClient+mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A7D7DC298C7B83000CF334 /* AuthClient+mock.swift */; };
+		33A7D7E0298C7BB3000CF334 /* AuthClient.UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A7D7DF298C7BB3000CF334 /* AuthClient.UserProfile.swift */; };
+		33A7D7E2298C7D82000CF334 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A7D7E1298C7D82000CF334 /* Account.swift */; };
 		33C33A08298C2D5F0021D85C /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A07298C2D5F0021D85C /* Main.swift */; };
 		33C33A0A298C2D5F0021D85C /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A09298C2D5F0021D85C /* Home.swift */; };
 		33C33A0C298C2D610021D85C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33C33A0B298C2D610021D85C /* Assets.xcassets */; };
@@ -39,6 +44,11 @@
 		33A7D7CF298C76FB000CF334 /* Sports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sports.swift; sourceTree = "<group>"; };
 		33A7D7D1298C7704000CF334 /* Activities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activities.swift; sourceTree = "<group>"; };
 		33A7D7D3298C771B000CF334 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		33A7D7D5298C7AC5000CF334 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		33A7D7DA298C7B5E000CF334 /* AuthClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthClient.swift; sourceTree = "<group>"; };
+		33A7D7DC298C7B83000CF334 /* AuthClient+mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AuthClient+mock.swift"; sourceTree = "<group>"; };
+		33A7D7DF298C7BB3000CF334 /* AuthClient.UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthClient.UserProfile.swift; sourceTree = "<group>"; };
+		33A7D7E1298C7D82000CF334 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		33C33A04298C2D5F0021D85C /* ComposableNavigation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ComposableNavigation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		33C33A07298C2D5F0021D85C /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		33C33A09298C2D5F0021D85C /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
@@ -72,6 +82,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		33A7D7D9298C7B56000CF334 /* AuthClient */ = {
+			isa = PBXGroup;
+			children = (
+				33A7D7DE298C7BA8000CF334 /* _Models */,
+				33A7D7DA298C7B5E000CF334 /* AuthClient.swift */,
+				33A7D7DC298C7B83000CF334 /* AuthClient+mock.swift */,
+			);
+			path = AuthClient;
+			sourceTree = "<group>";
+		};
+		33A7D7DE298C7BA8000CF334 /* _Models */ = {
+			isa = PBXGroup;
+			children = (
+				33A7D7DF298C7BB3000CF334 /* AuthClient.UserProfile.swift */,
+			);
+			path = _Models;
+			sourceTree = "<group>";
+		};
 		33C339FB298C2D5F0021D85C = {
 			isa = PBXGroup;
 			children = (
@@ -109,6 +137,7 @@
 		33C33A1F298C30650021D85C /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
+				33A7D7D9298C7B56000CF334 /* AuthClient */,
 				33C33A2D298C35E80021D85C /* LocalDatabaseClient */,
 				33C33A2C298C35E40021D85C /* RadarClient */,
 			);
@@ -127,15 +156,17 @@
 		33C33A2A298C31200021D85C /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				33A7D7E1298C7D82000CF334 /* Account.swift */,
+				33A7D7D1298C7704000CF334 /* Activities.swift */,
 				33C33A09298C2D5F0021D85C /* Home.swift */,
 				33C33A1D298C2F1F0021D85C /* NewSession.swift */,
+				33A7D7CD298C766C000CF334 /* Players.swift */,
+				33A7D7D5298C7AC5000CF334 /* Profile.swift */,
 				33C33A39298C46200021D85C /* SessionDetails.swift */,
 				33C33A3B298C58750021D85C /* SessionRow.swift */,
 				33A7D7CB298C6C3C000CF334 /* Sessions.swift */,
-				33A7D7CD298C766C000CF334 /* Players.swift */,
-				33A7D7CF298C76FB000CF334 /* Sports.swift */,
-				33A7D7D1298C7704000CF334 /* Activities.swift */,
 				33A7D7D3298C771B000CF334 /* Settings.swift */,
+				33A7D7CF298C76FB000CF334 /* Sports.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -266,8 +297,12 @@
 				33A7D7D0298C76FB000CF334 /* Sports.swift in Sources */,
 				33A7D7CC298C6C3C000CF334 /* Sessions.swift in Sources */,
 				33C33A34298C361A0021D85C /* RadarClient.Measurement.swift in Sources */,
+				33A7D7DD298C7B83000CF334 /* AuthClient+mock.swift in Sources */,
 				33A7D7D4298C771B000CF334 /* Settings.swift in Sources */,
+				33A7D7E0298C7BB3000CF334 /* AuthClient.UserProfile.swift in Sources */,
+				33A7D7DB298C7B5E000CF334 /* AuthClient.swift in Sources */,
 				33C33A0A298C2D5F0021D85C /* Home.swift in Sources */,
+				33A7D7E2298C7D82000CF334 /* Account.swift in Sources */,
 				33C33A38298C411D0021D85C /* LocalDatabaseClient.Speed.swift in Sources */,
 				33A7D7CE298C766C000CF334 /* Players.swift in Sources */,
 				33C33A08298C2D5F0021D85C /* Main.swift in Sources */,
@@ -276,6 +311,7 @@
 				33C33A1E298C2F1F0021D85C /* NewSession.swift in Sources */,
 				33C33A23298C30860021D85C /* LocalDatabaseClient+mock.swift in Sources */,
 				33C33A26298C30A70021D85C /* LocalDatabaseClient.Session.swift in Sources */,
+				33A7D7D6298C7AC5000CF334 /* Profile.swift in Sources */,
 				33C33A36298C36300021D85C /* RadarClient+mock.swift in Sources */,
 				33C33A21298C306E0021D85C /* LocalDatabaseClient.swift in Sources */,
 			);

@@ -3,11 +3,14 @@ import SwiftUI
 
 struct Home: ReducerProtocol {
   struct State: Equatable {
+    var profile = Profile.State()
     var recentSessions = IdentifiedArrayOf<SessionRow.State>()
     var destination: Destination?
+    @BindingState var search = String()
     @BindingState var isFiltering = false
     
     enum Destination: Equatable {
+      case account(Account.State)
       case players(Players.State)
       case sports(Sports.State)
       case activities(Activities.State)
@@ -24,11 +27,14 @@ struct Home: ReducerProtocol {
     case toggleIsFiltering
     case newSessionButtonTapped
     case binding(BindingAction<State>)
+    case profileButtonTapped
     case setDestination(State.Destination?)
+    case profile(Profile.Action)
     case recentSessions(id: SessionRow.State.ID, action: SessionRow.Action)
     case destination(Destination)
     
     enum Destination: Equatable {
+      case account(Account.Action)
       case players(Players.Action)
       case sports(Sports.Action)
       case activities(Activities.Action)
@@ -43,6 +49,9 @@ struct Home: ReducerProtocol {
   
   var body: some ReducerProtocol<State, Action> {
     BindingReducer()
+    Scope(state: \.profile, action: /Action.profile) {
+      Profile()
+    }
     Reduce { state, action in
       switch action {
         
@@ -66,11 +75,18 @@ struct Home: ReducerProtocol {
         state.isFiltering.toggle()
         return .none
         
+      case .profileButtonTapped:
+        state.destination = .account(Account.State(profile: state.profile))
+        return .none
+        
       case .newSessionButtonTapped:
         state.destination = .newSession(NewSession.State())
         return .none
         
       case .recentSessions:
+        return .none
+        
+      case .profile:
         return .none
         
       case let .setDestination(value):
@@ -138,7 +154,7 @@ struct HomeView: View {
             Text("Recent Sessions")
             Spacer()
             SeeAll(store: store)
-          }.font(.caption)) {
+          }.font(.headline)) {
             ForEachStore(store.scope(
               state: \.recentSessions,
               action: Home.Action.recentSessions
@@ -152,6 +168,8 @@ struct HomeView: View {
         }
         .task { viewStore.send(.task) }
         .refreshable { viewStore.send(.task) }
+        .listStyle(.plain)
+        .searchable(text: viewStore.binding(\.$search))
         .toolbar {
           ToolbarItemGroup(placement: .bottomBar) {
             HStack {
@@ -193,7 +211,39 @@ struct HomeView: View {
             )
           }
         )
+        .sheet(
+          isPresented: viewStore.binding(
+            get: {
+              CasePath.extract(/Home.State.Destination.account)(from: $0.destination) != nil
+            },
+            send: {
+              Home.Action.setDestination($0 ? .account(.init(profile: viewStore.profile)) : nil)
+            }
+          ),
+          content: {
+            IfLetStore(
+              store
+                .scope(
+                  state: \.destination,
+                  action: Home.Action.destination
+                )
+                .scope(
+                  state: /Home.State.Destination.account,
+                  action: Home.Action.Destination.account
+                ),
+              then: AccountView.init
+            )
+          }
+        )
         .navigationTitle("PocketRadar")
+        .toolbar {
+          Button(action: { viewStore.send(.profileButtonTapped)}) {
+            SmallProfileView(store: store.scope(
+              state: \.profile,
+              action: Home.Action.profile
+            ))
+          }
+        }
       }
     }
   }
@@ -218,6 +268,7 @@ private struct PlayersNavigationLink: View {
           Label("Players", systemImage: "person.2")
         }
       )
+      .listRowSeparator(.hidden, edges: .top)
     }
   }
 }
