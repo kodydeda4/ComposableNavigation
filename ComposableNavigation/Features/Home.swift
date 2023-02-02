@@ -70,7 +70,7 @@ struct Home: ReducerProtocol {
         
       case .taskResponse(.failure):
         return .none
-      
+        
       case .toggleIsFiltering:
         state.isFiltering.toggle()
         return .none
@@ -109,27 +109,13 @@ struct Home: ReducerProtocol {
     }
     .ifLet(\.destination, action: /Action.destination) {
       EmptyReducer()
-        .ifCaseLet(/State.Destination.players, action: /Action.Destination.players) {
-          Players()
-        }
-        .ifCaseLet(/State.Destination.sports, action: /Action.Destination.sports) {
-          Sports()
-        }
-        .ifCaseLet(/State.Destination.activities, action: /Action.Destination.activities) {
-          Activities()
-        }
-        .ifCaseLet(/State.Destination.settings, action: /Action.Destination.settings) {
-          Settings()
-        }
-        .ifCaseLet(/State.Destination.newSession, action: /Action.Destination.newSession) {
-          NewSession()
-        }
-        .ifCaseLet(/State.Destination.sessionDetails, action: /Action.Destination.sessionDetails) {
-          SessionDetails()
-        }
-        .ifCaseLet(/State.Destination.sessions, action: /Action.Destination.sessions) {
-          Sessions()
-        }
+        .ifCaseLet(/State.Destination.players, action: /Action.Destination.players) { Players() }
+        .ifCaseLet(/State.Destination.sports, action: /Action.Destination.sports) { Sports() }
+        .ifCaseLet(/State.Destination.activities, action: /Action.Destination.activities) { Activities() }
+        .ifCaseLet(/State.Destination.settings, action: /Action.Destination.settings) { Settings() }
+        .ifCaseLet(/State.Destination.newSession, action: /Action.Destination.newSession) { NewSession() }
+        .ifCaseLet(/State.Destination.sessionDetails, action: /Action.Destination.sessionDetails) { SessionDetails() }
+        .ifCaseLet(/State.Destination.sessions, action: /Action.Destination.sessions) { Sessions() }
     }
     ._printChanges()
   }
@@ -197,42 +183,22 @@ struct HomeView: View {
             }
           ),
           content: {
-            IfLetStore(
-              store
-                .scope(
-                  state: \.destination,
-                  action: Home.Action.destination
-                )
-                .scope(
-                  state: /Home.State.Destination.newSession,
-                  action: Home.Action.Destination.newSession
-                ),
-              then: NewSessionView.init
-            )
+            IfLetStore(store
+              .scope(state: \.destination, action: Home.Action.destination)
+              .scope(state: /Home.State.Destination.newSession, action: Home.Action.Destination.newSession)
+            ) { NewSessionView(store: $0) }
           }
         )
         .sheet(
           isPresented: viewStore.binding(
-            get: {
-              CasePath.extract(/Home.State.Destination.account)(from: $0.destination) != nil
-            },
-            send: {
-              Home.Action.setDestination($0 ? .account(.init(profile: viewStore.profile)) : nil)
-            }
+            get: { CasePath.extract(/Home.State.Destination.account)(from: $0.destination) != nil },
+            send: { Home.Action.setDestination($0 ? .account(.init(profile: viewStore.profile)) : nil) }
           ),
           content: {
-            IfLetStore(
-              store
-                .scope(
-                  state: \.destination,
-                  action: Home.Action.destination
-                )
-                .scope(
-                  state: /Home.State.Destination.account,
-                  action: Home.Action.Destination.account
-                ),
-              then: AccountView.init
-            )
+            IfLetStore(store
+              .scope(state: \.destination, action: Home.Action.destination)
+              .scope(state: /Home.State.Destination.account, action: Home.Action.Destination.account)
+            ) { AccountView(store: $0) }
           }
         )
         .navigationTitle("PocketRadar")
@@ -258,7 +224,7 @@ private struct PlayersNavigationLink: View {
         destination: IfLetStore(store
           .scope(state: \.destination, action: Home.Action.destination)
           .scope(state: /Home.State.Destination.players, action: Home.Action.Destination.players)
-                                , then: PlayersView.init),
+        ) { PlayersView(store: $0) },
         tag: true,
         selection: viewStore.binding(
           get: { _ in CasePath.extract(/Home.State.Destination.players)(from: viewStore.destination) != nil },
@@ -281,7 +247,7 @@ private struct SportsNavigationLink: View {
         destination: IfLetStore(store
           .scope(state: \.destination, action: Home.Action.destination)
           .scope(state: /Home.State.Destination.sports, action: Home.Action.Destination.sports)
-                                , then: SportsView.init),
+        ) { SportsView(store: $0) },
         tag: true,
         selection: viewStore.binding(
           get: { _ in CasePath.extract(/Home.State.Destination.sports)(from: viewStore.destination) != nil },
@@ -303,7 +269,7 @@ private struct ActivitiesNavigationLink: View {
         destination: IfLetStore(store
           .scope(state: \.destination, action: Home.Action.destination)
           .scope(state: /Home.State.Destination.activities, action: Home.Action.Destination.activities)
-                                , then: ActivitiesView.init),
+        ) { ActivitiesView(store: $0) },
         tag: true,
         selection: viewStore.binding(
           get: { _ in CasePath.extract(/Home.State.Destination.activities)(from: viewStore.destination) != nil },
@@ -325,7 +291,7 @@ private struct SettingsNavigationLink: View {
         destination: IfLetStore(store
           .scope(state: \.destination, action: Home.Action.destination)
           .scope(state: /Home.State.Destination.settings, action: Home.Action.Destination.settings)
-                                , then: SettingsView.init),
+        ) { SettingsView(store: $0) },
         tag: true,
         selection: viewStore.binding(
           get: { _ in CasePath.extract(/Home.State.Destination.settings)(from: viewStore.destination) != nil },
@@ -350,23 +316,15 @@ private struct RecentSessionNavigationLink: View {
           destination: IfLetStore(store
             .scope(state: \.destination, action: Home.Action.destination)
             .scope(state: /Home.State.Destination.sessionDetails, action: Home.Action.Destination.sessionDetails)
-                                  ,then: SessionDetailsView.init),
+          ) { SessionDetailsView(store: $0) },
           tag: childViewStore.id,
           selection: viewStore.binding(
-            get: {
-              CasePath.extract(/Home.State.Destination.sessionDetails)(from: $0.destination)?.session.id
-            },
-            send: {
-              Home.Action
-                .setDestination(
-                  viewStore.recentSessions[id: childViewStore.id]
-                    .flatMap({
-                      Home.State.Destination.sessionDetails(
-                        SessionDetails.State(session: $0.session)
-                      )
-                    })
-                )
-            }()
+            get: { CasePath.extract(/Home.State.Destination.sessionDetails)(from: $0.destination)?.session.id },
+            send: { Home.Action.setDestination(viewStore
+              .recentSessions[id: childViewStore.id].flatMap({
+                Home.State.Destination.sessionDetails(SessionDetails.State(session: $0.session))
+              })
+            )}()
           ),
           label: {
             SessionRowView(store: childStore)
@@ -386,7 +344,7 @@ private struct SeeAll: View {
         destination: IfLetStore(store
           .scope(state: \.destination, action: Home.Action.destination)
           .scope(state: /Home.State.Destination.sessions, action: Home.Action.Destination.sessions)
-                                , then: SessionsView.init),
+        ) { SessionsView(store: $0) },
         tag: true,
         selection: viewStore.binding(
           get: { _ in CasePath.extract(/Home.State.Destination.sessions)(from: viewStore.destination) != nil },
@@ -399,8 +357,6 @@ private struct SeeAll: View {
     }
   }
 }
-
-
 
 // MARK: - SwiftUI Previews
 
