@@ -7,18 +7,42 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		33C33A08298C2D5F0021D85C /* ComposableNavigationApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A07298C2D5F0021D85C /* ComposableNavigationApp.swift */; };
-		33C33A0A298C2D5F0021D85C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A09298C2D5F0021D85C /* ContentView.swift */; };
+		33C33A08298C2D5F0021D85C /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A07298C2D5F0021D85C /* Main.swift */; };
+		33C33A0A298C2D5F0021D85C /* Root.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A09298C2D5F0021D85C /* Root.swift */; };
 		33C33A0C298C2D610021D85C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33C33A0B298C2D610021D85C /* Assets.xcassets */; };
 		33C33A0F298C2D610021D85C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33C33A0E298C2D610021D85C /* Preview Assets.xcassets */; };
+		33C33A17298C2D840021D85C /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 33C33A16298C2D840021D85C /* SwiftUINavigation */; };
+		33C33A19298C2D840021D85C /* _SwiftUINavigationState in Frameworks */ = {isa = PBXBuildFile; productRef = 33C33A18298C2D840021D85C /* _SwiftUINavigationState */; };
+		33C33A1C298C2E120021D85C /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 33C33A1B298C2E120021D85C /* ComposableArchitecture */; };
+		33C33A1E298C2F1F0021D85C /* NewSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A1D298C2F1F0021D85C /* NewSession.swift */; };
+		33C33A21298C306E0021D85C /* LocalDatabaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A20298C306E0021D85C /* LocalDatabaseClient.swift */; };
+		33C33A23298C30860021D85C /* LocalDatabaseClient+mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A22298C30860021D85C /* LocalDatabaseClient+mock.swift */; };
+		33C33A26298C30A70021D85C /* LocalDatabaseClient.Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A25298C30A70021D85C /* LocalDatabaseClient.Session.swift */; };
+		33C33A29298C30B90021D85C /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 33C33A28298C30B90021D85C /* Tagged */; };
+		33C33A2F298C35FA0021D85C /* RadarClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A2E298C35FA0021D85C /* RadarClient.swift */; };
+		33C33A32298C360C0021D85C /* RadarClient.Radar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A31298C360C0021D85C /* RadarClient.Radar.swift */; };
+		33C33A34298C361A0021D85C /* RadarClient.Measurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A33298C361A0021D85C /* RadarClient.Measurement.swift */; };
+		33C33A36298C36300021D85C /* RadarClient+mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A35298C36300021D85C /* RadarClient+mock.swift */; };
+		33C33A38298C411D0021D85C /* LocalDatabaseClient.Speed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A37298C411D0021D85C /* LocalDatabaseClient.Speed.swift */; };
+		33C33A3A298C46200021D85C /* SessionDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A39298C46200021D85C /* SessionDetails.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		33C33A04298C2D5F0021D85C /* ComposableNavigation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ComposableNavigation.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		33C33A07298C2D5F0021D85C /* ComposableNavigationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposableNavigationApp.swift; sourceTree = "<group>"; };
-		33C33A09298C2D5F0021D85C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		33C33A07298C2D5F0021D85C /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
+		33C33A09298C2D5F0021D85C /* Root.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Root.swift; sourceTree = "<group>"; };
 		33C33A0B298C2D610021D85C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		33C33A0E298C2D610021D85C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		33C33A1D298C2F1F0021D85C /* NewSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSession.swift; sourceTree = "<group>"; };
+		33C33A20298C306E0021D85C /* LocalDatabaseClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseClient.swift; sourceTree = "<group>"; };
+		33C33A22298C30860021D85C /* LocalDatabaseClient+mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalDatabaseClient+mock.swift"; sourceTree = "<group>"; };
+		33C33A25298C30A70021D85C /* LocalDatabaseClient.Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseClient.Session.swift; sourceTree = "<group>"; };
+		33C33A2E298C35FA0021D85C /* RadarClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarClient.swift; sourceTree = "<group>"; };
+		33C33A31298C360C0021D85C /* RadarClient.Radar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarClient.Radar.swift; sourceTree = "<group>"; };
+		33C33A33298C361A0021D85C /* RadarClient.Measurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadarClient.Measurement.swift; sourceTree = "<group>"; };
+		33C33A35298C36300021D85C /* RadarClient+mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RadarClient+mock.swift"; sourceTree = "<group>"; };
+		33C33A37298C411D0021D85C /* LocalDatabaseClient.Speed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseClient.Speed.swift; sourceTree = "<group>"; };
+		33C33A39298C46200021D85C /* SessionDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDetails.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,6 +50,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33C33A19298C2D840021D85C /* _SwiftUINavigationState in Frameworks */,
+				33C33A17298C2D840021D85C /* SwiftUINavigation in Frameworks */,
+				33C33A29298C30B90021D85C /* Tagged in Frameworks */,
+				33C33A1C298C2E120021D85C /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -51,10 +79,9 @@
 		33C33A06298C2D5F0021D85C /* ComposableNavigation */ = {
 			isa = PBXGroup;
 			children = (
-				33C33A07298C2D5F0021D85C /* ComposableNavigationApp.swift */,
-				33C33A09298C2D5F0021D85C /* ContentView.swift */,
-				33C33A0B298C2D610021D85C /* Assets.xcassets */,
-				33C33A0D298C2D610021D85C /* Preview Content */,
+				33C33A1F298C30650021D85C /* Dependencies */,
+				33C33A2A298C31200021D85C /* Features */,
+				33C33A2B298C312C0021D85C /* Resources */,
 			);
 			path = ComposableNavigation;
 			sourceTree = "<group>";
@@ -65,6 +92,73 @@
 				33C33A0E298C2D610021D85C /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		33C33A1F298C30650021D85C /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				33C33A2D298C35E80021D85C /* LocalDatabaseClient */,
+				33C33A2C298C35E40021D85C /* RadarClient */,
+			);
+			path = Dependencies;
+			sourceTree = "<group>";
+		};
+		33C33A24298C309C0021D85C /* _Models */ = {
+			isa = PBXGroup;
+			children = (
+				33C33A25298C30A70021D85C /* LocalDatabaseClient.Session.swift */,
+				33C33A37298C411D0021D85C /* LocalDatabaseClient.Speed.swift */,
+			);
+			path = _Models;
+			sourceTree = "<group>";
+		};
+		33C33A2A298C31200021D85C /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				33C33A09298C2D5F0021D85C /* Root.swift */,
+				33C33A1D298C2F1F0021D85C /* NewSession.swift */,
+				33C33A39298C46200021D85C /* SessionDetails.swift */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		33C33A2B298C312C0021D85C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				33C33A0D298C2D610021D85C /* Preview Content */,
+				33C33A0B298C2D610021D85C /* Assets.xcassets */,
+				33C33A07298C2D5F0021D85C /* Main.swift */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		33C33A2C298C35E40021D85C /* RadarClient */ = {
+			isa = PBXGroup;
+			children = (
+				33C33A30298C36030021D85C /* _Models */,
+				33C33A2E298C35FA0021D85C /* RadarClient.swift */,
+				33C33A35298C36300021D85C /* RadarClient+mock.swift */,
+			);
+			path = RadarClient;
+			sourceTree = "<group>";
+		};
+		33C33A2D298C35E80021D85C /* LocalDatabaseClient */ = {
+			isa = PBXGroup;
+			children = (
+				33C33A24298C309C0021D85C /* _Models */,
+				33C33A20298C306E0021D85C /* LocalDatabaseClient.swift */,
+				33C33A22298C30860021D85C /* LocalDatabaseClient+mock.swift */,
+			);
+			path = LocalDatabaseClient;
+			sourceTree = "<group>";
+		};
+		33C33A30298C36030021D85C /* _Models */ = {
+			isa = PBXGroup;
+			children = (
+				33C33A31298C360C0021D85C /* RadarClient.Radar.swift */,
+				33C33A33298C361A0021D85C /* RadarClient.Measurement.swift */,
+			);
+			path = _Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +177,12 @@
 			dependencies = (
 			);
 			name = ComposableNavigation;
+			packageProductDependencies = (
+				33C33A16298C2D840021D85C /* SwiftUINavigation */,
+				33C33A18298C2D840021D85C /* _SwiftUINavigationState */,
+				33C33A1B298C2E120021D85C /* ComposableArchitecture */,
+				33C33A28298C30B90021D85C /* Tagged */,
+			);
 			productName = ComposableNavigation;
 			productReference = 33C33A04298C2D5F0021D85C /* ComposableNavigation.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +211,11 @@
 				Base,
 			);
 			mainGroup = 33C339FB298C2D5F0021D85C;
+			packageReferences = (
+				33C33A15298C2D840021D85C /* XCRemoteSwiftPackageReference "swiftui-navigation" */,
+				33C33A1A298C2E120021D85C /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				33C33A27298C30B90021D85C /* XCRemoteSwiftPackageReference "swift-tagged" */,
+			);
 			productRefGroup = 33C33A05298C2D5F0021D85C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -137,8 +242,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				33C33A0A298C2D5F0021D85C /* ContentView.swift in Sources */,
-				33C33A08298C2D5F0021D85C /* ComposableNavigationApp.swift in Sources */,
+				33C33A2F298C35FA0021D85C /* RadarClient.swift in Sources */,
+				33C33A34298C361A0021D85C /* RadarClient.Measurement.swift in Sources */,
+				33C33A0A298C2D5F0021D85C /* Root.swift in Sources */,
+				33C33A38298C411D0021D85C /* LocalDatabaseClient.Speed.swift in Sources */,
+				33C33A08298C2D5F0021D85C /* Main.swift in Sources */,
+				33C33A3A298C46200021D85C /* SessionDetails.swift in Sources */,
+				33C33A32298C360C0021D85C /* RadarClient.Radar.swift in Sources */,
+				33C33A1E298C2F1F0021D85C /* NewSession.swift in Sources */,
+				33C33A23298C30860021D85C /* LocalDatabaseClient+mock.swift in Sources */,
+				33C33A26298C30A70021D85C /* LocalDatabaseClient.Session.swift in Sources */,
+				33C33A36298C36300021D85C /* RadarClient+mock.swift in Sources */,
+				33C33A21298C306E0021D85C /* LocalDatabaseClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,7 +381,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"ComposableNavigation/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"ComposableNavigation/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = W6LQK45783;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -295,7 +410,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"ComposableNavigation/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"ComposableNavigation/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = W6LQK45783;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -339,6 +454,56 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		33C33A15298C2D840021D85C /* XCRemoteSwiftPackageReference "swiftui-navigation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swiftui-navigation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.1;
+			};
+		};
+		33C33A1A298C2E120021D85C /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.0;
+			};
+		};
+		33C33A27298C30B90021D85C /* XCRemoteSwiftPackageReference "swift-tagged" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-tagged";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		33C33A16298C2D840021D85C /* SwiftUINavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33C33A15298C2D840021D85C /* XCRemoteSwiftPackageReference "swiftui-navigation" */;
+			productName = SwiftUINavigation;
+		};
+		33C33A18298C2D840021D85C /* _SwiftUINavigationState */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33C33A15298C2D840021D85C /* XCRemoteSwiftPackageReference "swiftui-navigation" */;
+			productName = _SwiftUINavigationState;
+		};
+		33C33A1B298C2E120021D85C /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33C33A1A298C2E120021D85C /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+		33C33A28298C30B90021D85C /* Tagged */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33C33A27298C30B90021D85C /* XCRemoteSwiftPackageReference "swift-tagged" */;
+			productName = Tagged;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 33C339FC298C2D5F0021D85C /* Project object */;
 }
