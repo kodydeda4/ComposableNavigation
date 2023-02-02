@@ -4,23 +4,25 @@ import SwiftUI
 struct Root: ReducerProtocol {
   struct State: Equatable {
     var rows = IdentifiedArrayOf<Row>()
-    var destination: Destination.State?
+    var destination: Destination?
     
-    struct Row: Equatable, Identifiable {
-      var id: LocalDatabaseClient.Session.ID { model.id }
-      var model: LocalDatabaseClient.Session
+    enum Destination: Equatable {
+      case sessionDetails(SessionDetails.State)
+      case newSession(NewSession.State)
     }
   }
   
   enum Action: Equatable {
     case task
     case taskResponse(TaskResult<[LocalDatabaseClient.Session]>)
-    case setDestination(Destination.State?)
     case newSessionButtonTapped
+    case setDestination(State.Destination?)
+    case destination(Destination)
     
-    
-    case none
-    case destination(Destination.Action)
+    enum Destination: Equatable {
+      case sessionDetails(SessionDetails.Action)
+      case newSession(NewSession.Action)
+    }
   }
   
   @Dependency(\.database) var database
@@ -45,57 +47,42 @@ struct Root: ReducerProtocol {
       case .taskResponse(.failure):
         return .none
         
-      case let .setDestination(value):
-        state.destination = value
-        return .none
         
       case .newSessionButtonTapped:
         state.destination = .newSession(NewSession.State())
         return .none
-        
+
+      case let .setDestination(value):
+        state.destination = value
+        return .none
+
       case .destination(.newSession(.dismiss)):
         state.destination = nil
         return .send(.task)
         
       case .destination:
-        return .none
-        
-      case .none:
-        return .none
-        
+        return .none        
       }
     }
     .ifLet(\.destination, action: /Action.destination) {
-      Destination()
+      EmptyReducer()
+        .ifCaseLet(/State.Destination.newSession, action: /Action.Destination.newSession) {
+          NewSession()
+        }
+        .ifCaseLet(/State.Destination.sessionDetails, action: /Action.Destination.sessionDetails) {
+          SessionDetails()
+        }
     }
     ._printChanges()
   }
 }
 
-extension Root {
-  struct Destination: ReducerProtocol {
-    enum State: Equatable {
-      case sessionDetails(SessionDetails.State)
-      case newSession(NewSession.State)
-    }
-    
-    enum Action: Equatable {
-      case sessionDetails(SessionDetails.Action)
-      case newSession(NewSession.Action)
-    }
-    
-    var body: some ReducerProtocol<State, Action> {
-      EmptyReducer()
-        .ifCaseLet(/State.newSession, action: /Action.newSession) {
-          NewSession()
-        }
-        .ifCaseLet(/State.sessionDetails, action: /Action.sessionDetails) {
-          SessionDetails()
-        }
-    }
+extension Root.State {
+  struct Row: Equatable, Identifiable {
+    var id: LocalDatabaseClient.Session.ID { model.id }
+    var model: LocalDatabaseClient.Session
   }
 }
-
 
 
 // MARK: - SwiftUI
@@ -125,7 +112,7 @@ struct RootView: View {
         .sheet(
           isPresented: viewStore.binding(
             get: {
-              CasePath.extract(/Root.Destination.State.newSession)(from: $0.destination) != nil
+              CasePath.extract(/Root.State.Destination.newSession)(from: $0.destination) != nil
             },
             send: {
               Root.Action.setDestination($0 ? .newSession(.init()) : nil)
@@ -139,8 +126,8 @@ struct RootView: View {
                   action: Root.Action.destination
                 )
                 .scope(
-                  state: /Root.Destination.State.newSession,
-                  action: Root.Destination.Action.newSession
+                  state: /Root.State.Destination.newSession,
+                  action: Root.Action.Destination.newSession
                 ),
               then: NewSessionView.init
             )
@@ -155,7 +142,7 @@ struct RootView: View {
 private struct RowView: View {
   let store: StoreOf<Root>
   let row: Root.State.Row
-  
+
   var body: some View {
     WithViewStore(store) { viewStore in
       NavigationLink(
@@ -166,28 +153,28 @@ private struct RowView: View {
               action: Root.Action.destination
             )
             .scope(
-              state: /Root.Destination.State.sessionDetails,
-              action: Root.Destination.Action.sessionDetails
+              state: /Root.State.Destination.sessionDetails,
+              action: Root.Action.Destination.sessionDetails
             ),
           then: SessionDetailsView.init),
         tag: row.id,
         selection: viewStore.binding(
           get: {
-            CasePath.extract(/Root.Destination.State.sessionDetails)(from: $0.destination)?.session.id
+            CasePath.extract(/Root.State.Destination.sessionDetails)(from: $0.destination)?.session.id
           },
           send: {
             Root.Action.setDestination(
-              viewStore.rows[id: row.id].flatMap({ Root.Destination.State.sessionDetails(SessionDetails.State(session: $0.model)) })
+              viewStore.rows[id: row.id].flatMap({ Root.State.Destination.sessionDetails(SessionDetails.State(session: $0.model)) })
             )
           }()
         ),
         label: {
           Text("\(row.id.rawValue.description)")
             .lineLimit(1)
-          
+
         }
       )
-    }    
+    }
   }
 }
 
