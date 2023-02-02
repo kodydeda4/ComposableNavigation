@@ -3,7 +3,7 @@ import SwiftUI
 
 struct Root: ReducerProtocol {
   struct State: Equatable {
-    var rows = IdentifiedArrayOf<Row>()
+    var rows = IdentifiedArrayOf<SessionRow.State>()
     var destination: Destination?
     
     enum Destination: Equatable {
@@ -17,6 +17,7 @@ struct Root: ReducerProtocol {
     case taskResponse(TaskResult<[LocalDatabaseClient.Session]>)
     case newSessionButtonTapped
     case setDestination(State.Destination?)
+    case rows(id: SessionRow.State.ID, action: SessionRow.Action)
     case destination(Destination)
     
     enum Destination: Equatable {
@@ -40,16 +41,18 @@ struct Root: ReducerProtocol {
         
       case let .taskResponse(.success(values)):
         state.rows = .init(uniqueElements: values.map {
-          State.Row(model: $0)
+          SessionRow.State(session: $0)
         })
         return .none
         
       case .taskResponse(.failure):
         return .none
         
-        
       case .newSessionButtonTapped:
         state.destination = .newSession(NewSession.State())
+        return .none
+        
+      case .rows:
         return .none
 
       case let .setDestination(value):
@@ -61,8 +64,11 @@ struct Root: ReducerProtocol {
         return .send(.task)
         
       case .destination:
-        return .none        
+        return .none
       }
+    }
+    .forEach(\.rows, action: /Action.rows) {
+      SessionRow()
     }
     .ifLet(\.destination, action: /Action.destination) {
       EmptyReducer()
@@ -95,8 +101,14 @@ struct RootView: View {
       NavigationStack {
         List {
           Section("Recent Sessions") {
-            ForEach(viewStore.rows) { row in
-              RowView(store: store, row: row)
+            ForEachStore(store.scope(
+              state: \.rows,
+              action: Root.Action.rows
+            )) { childStore in
+              RowView(
+                store: store,
+                childStore: childStore
+              )
             }
           }
         }
@@ -141,39 +153,39 @@ struct RootView: View {
 
 private struct RowView: View {
   let store: StoreOf<Root>
-  let row: Root.State.Row
+  let childStore: StoreOf<SessionRow>
 
   var body: some View {
     WithViewStore(store) { viewStore in
-      NavigationLink(
-        destination: IfLetStore(
-          store
-            .scope(
-              state: \.destination,
-              action: Root.Action.destination
-            )
-            .scope(
-              state: /Root.State.Destination.sessionDetails,
-              action: Root.Action.Destination.sessionDetails
-            ),
-          then: SessionDetailsView.init),
-        tag: row.id,
-        selection: viewStore.binding(
-          get: {
-            CasePath.extract(/Root.State.Destination.sessionDetails)(from: $0.destination)?.session.id
-          },
-          send: {
-            Root.Action.setDestination(
-              viewStore.rows[id: row.id].flatMap({ Root.State.Destination.sessionDetails(SessionDetails.State(session: $0.model)) })
-            )
-          }()
-        ),
-        label: {
-          Text("\(row.id.rawValue.description)")
-            .lineLimit(1)
-
-        }
-      )
+      WithViewStore(childStore) { childViewStore in
+        NavigationLink(
+          destination: IfLetStore(
+            store
+              .scope(
+                state: \.destination,
+                action: Root.Action.destination
+              )
+              .scope(
+                state: /Root.State.Destination.sessionDetails,
+                action: Root.Action.Destination.sessionDetails
+              ),
+            then: SessionDetailsView.init),
+          tag: childViewStore.id,
+          selection: viewStore.binding(
+            get: {
+              CasePath.extract(/Root.State.Destination.sessionDetails)(from: $0.destination)?.session.id
+            },
+            send: {
+              Root.Action.setDestination(
+                viewStore.rows[id: childViewStore.id].flatMap({ Root.State.Destination.sessionDetails(SessionDetails.State(session: $0.session)) })
+              )
+            }()
+          ),
+          label: {
+            SessionRowView(store: childStore)
+          }
+        )
+      }
     }
   }
 }
