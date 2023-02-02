@@ -3,7 +3,7 @@ import SwiftUI
 
 struct Root: ReducerProtocol {
   struct State: Equatable {
-    var rows = IdentifiedArrayOf<SessionRow.State>()
+    var recentSessions = IdentifiedArrayOf<SessionRow.State>()
     var destination: Destination?
     
     enum Destination: Equatable {
@@ -17,7 +17,7 @@ struct Root: ReducerProtocol {
     case taskResponse(TaskResult<[LocalDatabaseClient.Session]>)
     case newSessionButtonTapped
     case setDestination(State.Destination?)
-    case rows(id: SessionRow.State.ID, action: SessionRow.Action)
+    case recentSessions(id: SessionRow.State.ID, action: SessionRow.Action)
     case destination(Destination)
     
     enum Destination: Equatable {
@@ -40,7 +40,7 @@ struct Root: ReducerProtocol {
         }
         
       case let .taskResponse(.success(values)):
-        state.rows = .init(uniqueElements: values.map {
+        state.recentSessions = .init(uniqueElements: values.map {
           SessionRow.State(session: $0)
         })
         return .none
@@ -52,7 +52,7 @@ struct Root: ReducerProtocol {
         state.destination = .newSession(NewSession.State())
         return .none
         
-      case .rows:
+      case .recentSessions:
         return .none
 
       case let .setDestination(value):
@@ -67,7 +67,7 @@ struct Root: ReducerProtocol {
         return .none
       }
     }
-    .forEach(\.rows, action: /Action.rows) {
+    .forEach(\.recentSessions, action: /Action.recentSessions) {
       SessionRow()
     }
     .ifLet(\.destination, action: /Action.destination) {
@@ -102,8 +102,8 @@ struct RootView: View {
         List {
           Section("Recent Sessions") {
             ForEachStore(store.scope(
-              state: \.rows,
-              action: Root.Action.rows
+              state: \.recentSessions,
+              action: Root.Action.recentSessions
             )) { childStore in
               RowView(
                 store: store,
@@ -177,7 +177,7 @@ private struct RowView: View {
             },
             send: {
               Root.Action.setDestination(
-                viewStore.rows[id: childViewStore.id].flatMap({ Root.State.Destination.sessionDetails(SessionDetails.State(session: $0.session)) })
+                viewStore.recentSessions[id: childViewStore.id].flatMap({ Root.State.Destination.sessionDetails(SessionDetails.State(session: $0.session)) })
               )
             }()
           ),
