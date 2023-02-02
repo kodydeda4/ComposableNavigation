@@ -1,7 +1,7 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct Root: ReducerProtocol {
+struct PocketRadar: ReducerProtocol {
   struct State: Equatable {
     var recentSessions = IdentifiedArrayOf<SessionRow.State>()
     var destination: Destination?
@@ -83,18 +83,10 @@ struct Root: ReducerProtocol {
   }
 }
 
-extension Root.State {
-  struct Row: Equatable, Identifiable {
-    var id: LocalDatabaseClient.Session.ID { model.id }
-    var model: LocalDatabaseClient.Session
-  }
-}
-
-
 // MARK: - SwiftUI
 
-struct RootView: View {
-  let store: StoreOf<Root>
+struct PocketRadarView: View {
+  let store: StoreOf<PocketRadar>
   
   var body: some View {
     WithViewStore(store) { viewStore in
@@ -103,7 +95,7 @@ struct RootView: View {
           Section("Recent Sessions") {
             ForEachStore(store.scope(
               state: \.recentSessions,
-              action: Root.Action.recentSessions
+              action: PocketRadar.Action.recentSessions
             )) { childStore in
               RowView(
                 store: store,
@@ -124,10 +116,10 @@ struct RootView: View {
         .sheet(
           isPresented: viewStore.binding(
             get: {
-              CasePath.extract(/Root.State.Destination.newSession)(from: $0.destination) != nil
+              CasePath.extract(/PocketRadar.State.Destination.newSession)(from: $0.destination) != nil
             },
             send: {
-              Root.Action.setDestination($0 ? .newSession(.init()) : nil)
+              PocketRadar.Action.setDestination($0 ? .newSession(.init()) : nil)
             }
           ),
           content: {
@@ -135,11 +127,11 @@ struct RootView: View {
               store
                 .scope(
                   state: \.destination,
-                  action: Root.Action.destination
+                  action: PocketRadar.Action.destination
                 )
                 .scope(
-                  state: /Root.State.Destination.newSession,
-                  action: Root.Action.Destination.newSession
+                  state: /PocketRadar.State.Destination.newSession,
+                  action: PocketRadar.Action.Destination.newSession
                 ),
               then: NewSessionView.init
             )
@@ -152,7 +144,7 @@ struct RootView: View {
 }
 
 private struct RowView: View {
-  let store: StoreOf<Root>
+  let store: StoreOf<PocketRadar>
   let childStore: StoreOf<SessionRow>
 
   var body: some View {
@@ -163,21 +155,21 @@ private struct RowView: View {
             store
               .scope(
                 state: \.destination,
-                action: Root.Action.destination
+                action: PocketRadar.Action.destination
               )
               .scope(
-                state: /Root.State.Destination.sessionDetails,
-                action: Root.Action.Destination.sessionDetails
+                state: /PocketRadar.State.Destination.sessionDetails,
+                action: PocketRadar.Action.Destination.sessionDetails
               ),
             then: SessionDetailsView.init),
           tag: childViewStore.id,
           selection: viewStore.binding(
             get: {
-              CasePath.extract(/Root.State.Destination.sessionDetails)(from: $0.destination)?.session.id
+              CasePath.extract(/PocketRadar.State.Destination.sessionDetails)(from: $0.destination)?.session.id
             },
             send: {
-              Root.Action.setDestination(
-                viewStore.recentSessions[id: childViewStore.id].flatMap({ Root.State.Destination.sessionDetails(SessionDetails.State(session: $0.session)) })
+              PocketRadar.Action.setDestination(
+                viewStore.recentSessions[id: childViewStore.id].flatMap({ PocketRadar.State.Destination.sessionDetails(SessionDetails.State(session: $0.session)) })
               )
             }()
           ),
@@ -193,12 +185,12 @@ private struct RowView: View {
 
 // MARK: - SwiftUI Previews
 
-struct RootView_Previews: PreviewProvider {
+struct PocketRadarView_Previews: PreviewProvider {
   static var previews: some View {
-    RootView(
+    PocketRadarView(
       store: Store(
-        initialState: Root.State(),
-        reducer: Root()
+        initialState: PocketRadar.State(),
+        reducer: PocketRadar()
       )
     )
   }
