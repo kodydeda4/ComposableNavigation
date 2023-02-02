@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		33A7D7CC298C6C3C000CF334 /* Sessions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33A7D7CB298C6C3C000CF334 /* Sessions.swift */; };
 		33C33A08298C2D5F0021D85C /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A07298C2D5F0021D85C /* Main.swift */; };
 		33C33A0A298C2D5F0021D85C /* PocketRadar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C33A09298C2D5F0021D85C /* PocketRadar.swift */; };
 		33C33A0C298C2D610021D85C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33C33A0B298C2D610021D85C /* Assets.xcassets */; };
@@ -29,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		33A7D7CB298C6C3C000CF334 /* Sessions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sessions.swift; sourceTree = "<group>"; };
 		33C33A04298C2D5F0021D85C /* ComposableNavigation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ComposableNavigation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		33C33A07298C2D5F0021D85C /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		33C33A09298C2D5F0021D85C /* PocketRadar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketRadar.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				33C33A1D298C2F1F0021D85C /* NewSession.swift */,
 				33C33A39298C46200021D85C /* SessionDetails.swift */,
 				33C33A3B298C58750021D85C /* SessionRow.swift */,
+				33A7D7CB298C6C3C000CF334 /* Sessions.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -247,6 +250,7 @@
 			files = (
 				33C33A3C298C58750021D85C /* SessionRow.swift in Sources */,
 				33C33A2F298C35FA0021D85C /* RadarClient.swift in Sources */,
+				33A7D7CC298C6C3C000CF334 /* Sessions.swift in Sources */,
 				33C33A34298C361A0021D85C /* RadarClient.Measurement.swift in Sources */,
 				33C33A0A298C2D5F0021D85C /* PocketRadar.swift in Sources */,
 				33C33A38298C411D0021D85C /* LocalDatabaseClient.Speed.swift in Sources */,

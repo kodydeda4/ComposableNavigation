@@ -1,21 +1,26 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct PocketRadar: ReducerProtocol {
+struct Home: ReducerProtocol {
   struct State: Equatable {
     var recentSessions = IdentifiedArrayOf<SessionRow.State>()
     var destination: Destination?
+    @BindingState var isFiltering = false
     
     enum Destination: Equatable {
       case sessionDetails(SessionDetails.State)
       case newSession(NewSession.State)
+      case sessions(Sessions.State)
     }
   }
   
-  enum Action: Equatable {
+  enum Action: BindableAction, Equatable {
     case task
     case taskResponse(TaskResult<[LocalDatabaseClient.Session]>)
+    case seeAllButtonTapped
+    case toggleIsFiltering
     case newSessionButtonTapped
+    case binding(BindingAction<State>)
     case setDestination(State.Destination?)
     case recentSessions(id: SessionRow.State.ID, action: SessionRow.Action)
     case destination(Destination)
@@ -23,12 +28,14 @@ struct PocketRadar: ReducerProtocol {
     enum Destination: Equatable {
       case sessionDetails(SessionDetails.Action)
       case newSession(NewSession.Action)
+      case sessions(Sessions.Action)
     }
   }
   
   @Dependency(\.database) var database
   
   var body: some ReducerProtocol<State, Action> {
+    BindingReducer()
     Reduce { state, action in
       switch action {
         
@@ -48,22 +55,33 @@ struct PocketRadar: ReducerProtocol {
       case .taskResponse(.failure):
         return .none
         
+      case .seeAllButtonTapped:
+        state.destination = .sessions(Sessions.State())
+        return .none
+      
+      case .toggleIsFiltering:
+        state.isFiltering.toggle()
+        return .none
+        
       case .newSessionButtonTapped:
         state.destination = .newSession(NewSession.State())
         return .none
         
       case .recentSessions:
         return .none
-
+        
       case let .setDestination(value):
         state.destination = value
         return .none
-
+        
       case .destination(.newSession(.dismiss)):
         state.destination = nil
         return .send(.task)
         
       case .destination:
+        return .none
+        
+      case .binding:
         return .none
       }
     }
@@ -78,6 +96,9 @@ struct PocketRadar: ReducerProtocol {
         .ifCaseLet(/State.Destination.sessionDetails, action: /Action.Destination.sessionDetails) {
           SessionDetails()
         }
+        .ifCaseLet(/State.Destination.sessions, action: /Action.Destination.sessions) {
+          Sessions()
+        }
     }
     ._printChanges()
   }
@@ -85,19 +106,23 @@ struct PocketRadar: ReducerProtocol {
 
 // MARK: - SwiftUI
 
-struct PocketRadarView: View {
-  let store: StoreOf<PocketRadar>
+struct HomeView: View {
+  let store: StoreOf<Home>
   
   var body: some View {
     WithViewStore(store) { viewStore in
       NavigationStack {
         List {
-          Section("Recent Sessions") {
+          Section(header: HStack {
+            Text("Recent Sessions")
+            Spacer()
+            SeeAll(store: store)
+          }) {
             ForEachStore(store.scope(
               state: \.recentSessions,
-              action: PocketRadar.Action.recentSessions
+              action: Home.Action.recentSessions
             )) { childStore in
-              RowView(
+              RecentSessionNavigationLink(
                 store: store,
                 childStore: childStore
               )
@@ -108,18 +133,28 @@ struct PocketRadarView: View {
         .refreshable { viewStore.send(.task) }
         .toolbar {
           ToolbarItemGroup(placement: .bottomBar) {
-            Button(action: { viewStore.send(.newSessionButtonTapped) }) {
-              Image(systemName: "square.and.pencil")
+            HStack {
+              Button(action: { viewStore.send(.toggleIsFiltering) }) {
+                Image(
+                  systemName: viewStore.isFiltering
+                  ? "line.3.horizontal.decrease.circle.fill"
+                  : "line.3.horizontal.decrease.circle"
+                )
+              }
+              Spacer()
+              Button(action: { viewStore.send(.newSessionButtonTapped) }) {
+                Image(systemName: "square.and.pencil")
+              }
             }
           }
         }
         .sheet(
           isPresented: viewStore.binding(
             get: {
-              CasePath.extract(/PocketRadar.State.Destination.newSession)(from: $0.destination) != nil
+              CasePath.extract(/Home.State.Destination.newSession)(from: $0.destination) != nil
             },
             send: {
-              PocketRadar.Action.setDestination($0 ? .newSession(.init()) : nil)
+              Home.Action.setDestination($0 ? .newSession(.init()) : nil)
             }
           ),
           content: {
@@ -127,11 +162,11 @@ struct PocketRadarView: View {
               store
                 .scope(
                   state: \.destination,
-                  action: PocketRadar.Action.destination
+                  action: Home.Action.destination
                 )
                 .scope(
-                  state: /PocketRadar.State.Destination.newSession,
-                  action: PocketRadar.Action.Destination.newSession
+                  state: /Home.State.Destination.newSession,
+                  action: Home.Action.Destination.newSession
                 ),
               then: NewSessionView.init
             )
@@ -143,34 +178,33 @@ struct PocketRadarView: View {
   }
 }
 
-private struct RowView: View {
-  let store: StoreOf<PocketRadar>
+private struct RecentSessionNavigationLink: View {
+  let store: StoreOf<Home>
   let childStore: StoreOf<SessionRow>
-
+  
   var body: some View {
     WithViewStore(store) { viewStore in
       WithViewStore(childStore) { childViewStore in
         NavigationLink(
-          destination: IfLetStore(
-            store
-              .scope(
-                state: \.destination,
-                action: PocketRadar.Action.destination
-              )
-              .scope(
-                state: /PocketRadar.State.Destination.sessionDetails,
-                action: PocketRadar.Action.Destination.sessionDetails
-              ),
-            then: SessionDetailsView.init),
+          destination: IfLetStore(store
+            .scope(state: \.destination, action: Home.Action.destination)
+            .scope(state: /Home.State.Destination.sessionDetails, action: Home.Action.Destination.sessionDetails)
+                                  ,then: SessionDetailsView.init),
           tag: childViewStore.id,
           selection: viewStore.binding(
             get: {
-              CasePath.extract(/PocketRadar.State.Destination.sessionDetails)(from: $0.destination)?.session.id
+              CasePath.extract(/Home.State.Destination.sessionDetails)(from: $0.destination)?.session.id
             },
             send: {
-              PocketRadar.Action.setDestination(
-                viewStore.recentSessions[id: childViewStore.id].flatMap({ PocketRadar.State.Destination.sessionDetails(SessionDetails.State(session: $0.session)) })
-              )
+              Home.Action
+                .setDestination(
+                  viewStore.recentSessions[id: childViewStore.id]
+                    .flatMap({
+                      Home.State.Destination.sessionDetails(
+                        SessionDetails.State(session: $0.session)
+                      )
+                    })
+                )
             }()
           ),
           label: {
@@ -182,15 +216,39 @@ private struct RowView: View {
   }
 }
 
+private struct SeeAll: View {
+  let store: StoreOf<Home>
+  
+  var body: some View {
+    WithViewStore(store) { viewStore in
+      NavigationLink(
+        destination: IfLetStore(store
+          .scope(state: \.destination, action: Home.Action.destination)
+          .scope(state: /Home.State.Destination.sessions, action: Home.Action.Destination.sessions)
+                                , then: SessionsView.init),
+        tag: true,
+        selection: viewStore.binding(
+          get: { _ in CasePath.extract(/Home.State.Destination.sessions)(from: viewStore.destination) != nil },
+          send: { Home.Action.setDestination(.sessions(Sessions.State())) }()
+        ),
+        label: {
+          Text("See All")
+        }
+      )
+    }
+  }
+}
+
+
 
 // MARK: - SwiftUI Previews
 
-struct PocketRadarView_Previews: PreviewProvider {
+struct HomeView_Previews: PreviewProvider {
   static var previews: some View {
-    PocketRadarView(
+    HomeView(
       store: Store(
-        initialState: PocketRadar.State(),
-        reducer: PocketRadar()
+        initialState: Home.State(),
+        reducer: Home()
       )
     )
   }

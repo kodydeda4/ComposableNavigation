@@ -5,9 +5,9 @@ import ComposableArchitecture
 struct Main: App {
   var body: some Scene {
     WindowGroup {
-      PocketRadarView(store: .init(
-        initialState: PocketRadar.State(),
-        reducer: PocketRadar()
+      HomeView(store: .init(
+        initialState: Home.State(),
+        reducer: Home()
       ))
     }
   }
