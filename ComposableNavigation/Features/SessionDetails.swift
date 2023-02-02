@@ -5,15 +5,17 @@ struct SessionDetails: ReducerProtocol {
   struct State: Equatable {
     var session: LocalDatabaseClient.Session
     var measurements = [LocalDatabaseClient.Measurement]()
+    @BindingState var search = String()
   }
   
-  enum Action: Equatable {
+  enum Action: BindableAction, Equatable {
     case task
     case taskResponse(TaskResult<[LocalDatabaseClient.Measurement]>)
+    case binding(BindingAction<State>)
   }
   
   @Dependency(\.database) var database
-
+  
   var body: some ReducerProtocol<State, Action> {
     Reduce { state, action in
       switch action {
@@ -38,6 +40,9 @@ struct SessionDetails: ReducerProtocol {
       case .taskResponse(.failure):
         return .none
         
+      case .binding:
+        return .none
+        
       }
     }
   }
@@ -53,16 +58,18 @@ struct SessionDetailsView: View {
     WithViewStore(store) { viewStore in
       NavigationStack {
         List {
-          Section("Speeds") {
-            ForEach(viewStore.measurements) { measurement in
-              Text(measurement.measurement.value.formattedDescription)
-              +
-              Text(" \(measurement.measurement.unit.symbol)")
-            }
+          ForEach(viewStore.measurements) { measurement in
+            Text(measurement.measurement.value.formattedDescription)
+            +
+            Text(" \(measurement.measurement.unit.symbol)")
           }
         }
         .task { viewStore.send(.task) }
         .navigationTitle("\(viewStore.session.id.description)")
+        .searchable(
+          text: viewStore.binding(\.$search),
+          placement: .navigationBarDrawer(displayMode: .always)
+        )
       }
     }
   }

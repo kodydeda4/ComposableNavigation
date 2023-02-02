@@ -8,6 +8,10 @@ struct Home: ReducerProtocol {
     @BindingState var isFiltering = false
     
     enum Destination: Equatable {
+      case players(Players.State)
+      case sports(Sports.State)
+      case activities(Activities.State)
+      case settings(Settings.State)
       case sessionDetails(SessionDetails.State)
       case newSession(NewSession.State)
       case sessions(Sessions.State)
@@ -17,7 +21,6 @@ struct Home: ReducerProtocol {
   enum Action: BindableAction, Equatable {
     case task
     case taskResponse(TaskResult<[LocalDatabaseClient.Session]>)
-    case seeAllButtonTapped
     case toggleIsFiltering
     case newSessionButtonTapped
     case binding(BindingAction<State>)
@@ -26,6 +29,10 @@ struct Home: ReducerProtocol {
     case destination(Destination)
     
     enum Destination: Equatable {
+      case players(Players.Action)
+      case sports(Sports.Action)
+      case activities(Activities.Action)
+      case settings(Settings.Action)
       case sessionDetails(SessionDetails.Action)
       case newSession(NewSession.Action)
       case sessions(Sessions.Action)
@@ -53,10 +60,6 @@ struct Home: ReducerProtocol {
         return .none
         
       case .taskResponse(.failure):
-        return .none
-        
-      case .seeAllButtonTapped:
-        state.destination = .sessions(Sessions.State())
         return .none
       
       case .toggleIsFiltering:
@@ -90,6 +93,18 @@ struct Home: ReducerProtocol {
     }
     .ifLet(\.destination, action: /Action.destination) {
       EmptyReducer()
+        .ifCaseLet(/State.Destination.players, action: /Action.Destination.players) {
+          Players()
+        }
+        .ifCaseLet(/State.Destination.sports, action: /Action.Destination.sports) {
+          Sports()
+        }
+        .ifCaseLet(/State.Destination.activities, action: /Action.Destination.activities) {
+          Activities()
+        }
+        .ifCaseLet(/State.Destination.settings, action: /Action.Destination.settings) {
+          Settings()
+        }
         .ifCaseLet(/State.Destination.newSession, action: /Action.Destination.newSession) {
           NewSession()
         }
@@ -113,11 +128,17 @@ struct HomeView: View {
     WithViewStore(store) { viewStore in
       NavigationStack {
         List {
+          Section {
+            PlayersNavigationLink(store: store)
+            SportsNavigationLink(store: store)
+            ActivitiesNavigationLink(store: store)
+            SettingsNavigationLink(store: store)
+          }
           Section(header: HStack {
             Text("Recent Sessions")
             Spacer()
             SeeAll(store: store)
-          }) {
+          }.font(.caption)) {
             ForEachStore(store.scope(
               state: \.recentSessions,
               action: Home.Action.recentSessions
@@ -174,6 +195,95 @@ struct HomeView: View {
         )
         .navigationTitle("PocketRadar")
       }
+    }
+  }
+}
+
+private struct PlayersNavigationLink: View {
+  let store: StoreOf<Home>
+  
+  var body: some View {
+    WithViewStore(store) { viewStore in
+      NavigationLink(
+        destination: IfLetStore(store
+          .scope(state: \.destination, action: Home.Action.destination)
+          .scope(state: /Home.State.Destination.players, action: Home.Action.Destination.players)
+                                , then: PlayersView.init),
+        tag: true,
+        selection: viewStore.binding(
+          get: { _ in CasePath.extract(/Home.State.Destination.players)(from: viewStore.destination) != nil },
+          send: { Home.Action.setDestination(.players(Players.State())) }()
+        ),
+        label: {
+          Label("Players", systemImage: "person.2")
+        }
+      )
+    }
+  }
+}
+private struct SportsNavigationLink: View {
+  let store: StoreOf<Home>
+  
+  var body: some View {
+    WithViewStore(store) { viewStore in
+      NavigationLink(
+        destination: IfLetStore(store
+          .scope(state: \.destination, action: Home.Action.destination)
+          .scope(state: /Home.State.Destination.sports, action: Home.Action.Destination.sports)
+                                , then: SportsView.init),
+        tag: true,
+        selection: viewStore.binding(
+          get: { _ in CasePath.extract(/Home.State.Destination.sports)(from: viewStore.destination) != nil },
+          send: { Home.Action.setDestination(.sports(Sports.State())) }()
+        ),
+        label: {
+          Label("Sports", systemImage: "baseball")
+        }
+      )
+    }
+  }
+}
+private struct ActivitiesNavigationLink: View {
+  let store: StoreOf<Home>
+  
+  var body: some View {
+    WithViewStore(store) { viewStore in
+      NavigationLink(
+        destination: IfLetStore(store
+          .scope(state: \.destination, action: Home.Action.destination)
+          .scope(state: /Home.State.Destination.activities, action: Home.Action.Destination.activities)
+                                , then: ActivitiesView.init),
+        tag: true,
+        selection: viewStore.binding(
+          get: { _ in CasePath.extract(/Home.State.Destination.activities)(from: viewStore.destination) != nil },
+          send: { Home.Action.setDestination(.activities(Activities.State())) }()
+        ),
+        label: {
+          Label("Activities", systemImage: "list.clipboard")
+        }
+      )
+    }
+  }
+}
+private struct SettingsNavigationLink: View {
+  let store: StoreOf<Home>
+  
+  var body: some View {
+    WithViewStore(store) { viewStore in
+      NavigationLink(
+        destination: IfLetStore(store
+          .scope(state: \.destination, action: Home.Action.destination)
+          .scope(state: /Home.State.Destination.settings, action: Home.Action.Destination.settings)
+                                , then: SettingsView.init),
+        tag: true,
+        selection: viewStore.binding(
+          get: { _ in CasePath.extract(/Home.State.Destination.settings)(from: viewStore.destination) != nil },
+          send: { Home.Action.setDestination(.settings(Settings.State())) }()
+        ),
+        label: {
+          Label("Settings", systemImage: "gear")
+        }
+      )
     }
   }
 }

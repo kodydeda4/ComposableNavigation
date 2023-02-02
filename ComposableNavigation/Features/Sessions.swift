@@ -5,17 +5,19 @@ struct Sessions: ReducerProtocol {
   struct State: Equatable {
     var recentSessions = IdentifiedArrayOf<SessionRow.State>()
     var destination: Destination?
+    @BindingState var search = String()
     
     enum Destination: Equatable {
       case sessionDetails(SessionDetails.State)
     }
   }
   
-  enum Action: Equatable {
+  enum Action: BindableAction, Equatable {
     case task
     case taskResponse(TaskResult<[LocalDatabaseClient.Session]>)
     case recentSessions(id: SessionRow.State.ID, action: SessionRow.Action)
     case setDestination(State.Destination?)
+    case binding(BindingAction<State>)
     case destination(Destination)
     
     enum Destination: Equatable {
@@ -26,6 +28,7 @@ struct Sessions: ReducerProtocol {
   @Dependency(\.database) var database
   
   var body: some ReducerProtocol<State, Action> {
+    BindingReducer()
     Reduce { state, action in
       switch action {
         
@@ -53,6 +56,9 @@ struct Sessions: ReducerProtocol {
         return .none
         
       case .destination:
+        return .none
+        
+      case .binding:
         return .none
       }
     }
@@ -92,6 +98,7 @@ struct SessionsView: View {
       .task { viewStore.send(.task) }
       .refreshable { viewStore.send(.task) }
       .navigationTitle("Sessions")
+      .searchable(text: viewStore.binding(\.$search))
     }
   }
 }
