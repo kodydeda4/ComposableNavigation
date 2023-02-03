@@ -99,17 +99,22 @@ struct ProfileView: View {
 // MARK: - SwiftUI Previews
 
 struct ProfileView_Previews: PreviewProvider {
+  static let store = Store(
+    initialState: Profile.State(),
+    reducer: Profile()
+  )
+  
   static var previews: some View {
     NavigationStack {
       List {
-        ProfileView(
-          store: Store(
-            initialState: Profile.State(),
-            reducer: Profile()
-          )
-        )
+        ProfileView(store: store)
       }
       .navigationTitle("Preview")
+      .toolbar {
+        Button(action: {}) {
+          SmallProfileView(store: store)
+        }
+      }
     }
   }
 }
