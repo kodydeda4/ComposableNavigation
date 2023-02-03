@@ -136,11 +136,20 @@ struct HomeView: View {
             ActivitiesNavigationLink(store: store)
             SettingsNavigationLink(store: store)
           }
+          .font(.title3)
+          
+          Spacer()
+            .listRowSeparator(.hidden)
+            .frame(height: 26)
+          
           Section(header: HStack {
             Text("Recent Sessions")
+              .font(.title2)
+              .bold()
+              .foregroundColor(.primary)
             Spacer()
             SeeAll(store: store)
-          }.font(.headline)) {
+          }) {
             ForEachStore(store.scope(
               state: \.recentSessions,
               action: Home.Action.recentSessions
@@ -175,12 +184,8 @@ struct HomeView: View {
         }
         .sheet(
           isPresented: viewStore.binding(
-            get: {
-              CasePath.extract(/Home.State.Destination.newSession)(from: $0.destination) != nil
-            },
-            send: {
-              Home.Action.setDestination($0 ? .newSession(.init()) : nil)
-            }
+            get: { CasePath.extract(/Home.State.Destination.newSession)(from: $0.destination) != nil },
+            send: { Home.Action.setDestination($0 ? .newSession(.init()) : nil) }
           ),
           content: {
             IfLetStore(store
@@ -330,6 +335,8 @@ private struct RecentSessionNavigationLink: View {
             SessionRowView(store: childStore)
           }
         )
+        .buttonStyle(.plain)
+        //.listRowBackground(EmptyView())
       }
     }
   }

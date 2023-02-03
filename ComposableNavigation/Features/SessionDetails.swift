@@ -64,7 +64,7 @@ struct SessionDetailsView: View {
           }
         }
         .task { viewStore.send(.task) }
-        .navigationTitle("\(viewStore.session.id.description)")
+        .navigationTitle("\(viewStore.session.id.rawValue.description.prefix(16).description)")
       }
     }
   }

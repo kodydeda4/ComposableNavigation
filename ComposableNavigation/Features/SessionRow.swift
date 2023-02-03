@@ -30,7 +30,7 @@ struct SessionRow: ReducerProtocol {
                 rv.append(measurement)
               }
             }
-            try await Task.sleep(for: .seconds(5))
+            //try await Task.sleep(for: .seconds(5))
             return rv
           })
         }
@@ -49,6 +49,22 @@ struct SessionRow: ReducerProtocol {
   }
 }
 
+private extension SessionRow.State {
+  var maxSpeed: Double? {
+    measurements.map(\.measurement.value).max()
+  }
+  var avgSpeed: Double? {
+    let total = measurements.map(\.measurement.value).reduce(0.0, +)
+    let count = Double(measurements.count)
+    
+    if total == 0 {
+      return nil
+    } else {
+      return total / count
+    }
+  }
+}
+
 
 // MARK: - SwiftUI
 
@@ -58,13 +74,63 @@ struct SessionRowView: View {
   var body: some View {
     WithViewStore(store) { viewStore in
       HStack {
-        Text("\(viewStore.id.rawValue.description)")
-          .lineLimit(1)
-        Spacer()
-        ProgressView()
-          .opacity(viewStore.isLoading ? 1 : 0)
+        
+        Text("\(viewStore.measurements.count)")
+          .frame(width: 40, height: 40)
+          .background(Color(.systemGray4))
+          .clipShape(Circle())
+          
+        
+        VStack(alignment: .leading, spacing: 2) {
+          HStack {
+            Text("\(viewStore.id.rawValue.description.prefix(16).description)")
+              .lineLimit(1)
+              .font(.caption)
+              .bold()
+            
+            Spacer()
+            
+            Text("\(Date().formatted())")
+              .lineLimit(1)
+              .font(.caption)
+              .foregroundColor(.secondary)
+          }
+          HStack {
+            VStack(alignment: .leading) {
+              Text("MAX (MPH)")
+                .font(.caption)
+                .foregroundColor(.secondary)
+              Text("\(viewStore.maxSpeed?.formattedDescription ?? "--")")
+                .foregroundColor(.accentColor)
+                .font(.caption)
+            }
+            Spacer()
+            VStack(alignment: .leading) {
+              Text("AVG (MPH)")
+                .font(.caption)
+                .foregroundColor(.secondary)
+              Text("\(viewStore.avgSpeed?.formattedDescription ?? "--")")
+                .foregroundColor(.primary)
+                .font(.caption)
+            }
+            Spacer()
+            VStack(alignment: .leading) {
+              Text("COUNT")
+                .font(.caption)
+                .foregroundColor(.secondary)
+              Text("\(viewStore.measurements.count)")
+                .foregroundColor(.primary)
+                .font(.caption)
+            }
+          }
+          
+          //        Spacer()
+          //        ProgressView()
+          //          .opacity(viewStore.isLoading ? 1 : 0)
+        }
       }
       .task { viewStore.send(.task) }
+      .padding(.vertical, 8)
     }
   }
 }
