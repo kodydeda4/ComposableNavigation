@@ -83,7 +83,7 @@ struct SessionsView: View {
   var body: some View {
     WithViewStore(store) { viewStore in
       List {
-        Section("Sessions") {
+        Section {
           ForEachStore(store.scope(
             state: \.recentSessions,
             action: Sessions.Action.recentSessions
@@ -97,6 +97,7 @@ struct SessionsView: View {
       }
       .task { viewStore.send(.task) }
       .refreshable { viewStore.send(.task) }
+      .listStyle(.plain)
       .navigationTitle("Sessions")
       .searchable(
         text: viewStore.binding(\.$search),

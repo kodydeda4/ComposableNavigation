@@ -138,10 +138,6 @@ struct HomeView: View {
           }
           .font(.title3)
           
-          Spacer()
-            .listRowSeparator(.hidden)
-            .frame(height: 26)
-          
           Section(header: HStack {
             Text("Recent Sessions")
               .font(.title2)
@@ -149,7 +145,7 @@ struct HomeView: View {
               .foregroundColor(.primary)
             Spacer()
             SeeAll(store: store)
-          }) {
+          }.padding(.top, 16)) {
             ForEachStore(store.scope(
               state: \.recentSessions,
               action: Home.Action.recentSessions

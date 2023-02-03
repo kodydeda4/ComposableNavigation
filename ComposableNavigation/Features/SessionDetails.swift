@@ -47,6 +47,21 @@ struct SessionDetails: ReducerProtocol {
   }
 }
 
+private extension SessionDetails.State {
+  var maxSpeed: Double? {
+    measurements.map(\.measurement.value).max()
+  }
+  var avgSpeed: Double? {
+    let total = measurements.map(\.measurement.value).reduce(0.0, +)
+    let count = Double(measurements.count)
+    
+    if total == 0 {
+      return nil
+    } else {
+      return total / count
+    }
+  }
+}
 
 // MARK: - SwiftUI
 
@@ -57,14 +72,70 @@ struct SessionDetailsView: View {
     WithViewStore(store) { viewStore in
       NavigationStack {
         List {
-          ForEach(viewStore.measurements.sorted()) { measurement in
-            Text(measurement.measurement.value.formattedDescription)
-            +
-            Text(" \(measurement.measurement.unit.symbol)")
+          Section {
+            Header(store: store)
+          }
+          .listRowSeparator(.hidden)
+          
+          Section("Speeds") {
+            ForEach(viewStore.measurements.sorted()) { measurement in
+              Text(measurement.measurement.value.formattedDescription)
+              +
+              Text(" \(measurement.measurement.unit.symbol)")
+            }
           }
         }
         .task { viewStore.send(.task) }
         .navigationTitle("\(viewStore.session.id.rawValue.description.prefix(16).description)")
+        .listStyle(.plain)
+        .toolbar {
+          Menu {
+            Button(action: {}) {
+              Label("Select", systemImage: "checkmark.circle")
+            }
+          } label: {
+            Label("Menu", systemImage: "ellipsis.circle")
+          }
+        }
+      }
+    }
+  }
+}
+
+private struct Header: View {
+  let store: StoreOf<SessionDetails>
+  
+  var body: some View {
+    WithViewStore(store) { viewStore in
+      HStack {
+        VStack {
+          Text("MAX (MPH")
+            .font(.subheadline)
+            .foregroundColor(.secondary)
+          Text("\(viewStore.maxSpeed?.description ?? "--")")
+            .foregroundColor(.accentColor)
+            .font(.title2)
+            .bold()
+        }
+        .frame(maxWidth: .infinity)
+        VStack {
+          Text("AVG (MPH)")
+            .font(.subheadline)
+            .foregroundColor(.secondary)
+          Text("\(viewStore.avgSpeed?.description ?? "--")")
+            .font(.title2)
+            .bold()
+        }
+        .frame(maxWidth: .infinity)
+        VStack {
+          Text("COUNT")
+            .font(.subheadline)
+            .foregroundColor(.secondary)
+          Text("\(viewStore.measurements.count.description)")
+            .font(.title2)
+            .bold()
+        }
+        .frame(maxWidth: .infinity)
       }
     }
   }
