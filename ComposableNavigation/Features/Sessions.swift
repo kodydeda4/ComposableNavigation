@@ -98,7 +98,10 @@ struct SessionsView: View {
       .task { viewStore.send(.task) }
       .refreshable { viewStore.send(.task) }
       .navigationTitle("Sessions")
-      .searchable(text: viewStore.binding(\.$search))
+      .searchable(
+        text: viewStore.binding(\.$search),
+        placement: .navigationBarDrawer(displayMode: .always)
+      )
     }
   }
 }
@@ -111,27 +114,16 @@ private struct RowView: View {
     WithViewStore(store) { viewStore in
       WithViewStore(childStore) { childViewStore in
         NavigationLink(
-          destination: IfLetStore(
-            store
-              .scope(
-                state: \.destination,
-                action: Sessions.Action.destination
-              )
-              .scope(
-                state: /Sessions.State.Destination.sessionDetails,
-                action: Sessions.Action.Destination.sessionDetails
-              ),
-            then: SessionDetailsView.init),
+          destination: IfLetStore(store
+            .scope(state: \.destination, action: Sessions.Action.destination)
+            .scope(state: /Sessions.State.Destination.sessionDetails, action: Sessions.Action.Destination.sessionDetails)
+          ) { SessionDetailsView(store: $0) },
           tag: childViewStore.id,
           selection: viewStore.binding(
-            get: {
-              CasePath.extract(/Sessions.State.Destination.sessionDetails)(from: $0.destination)?.session.id
-            },
-            send: {
-              Sessions.Action.setDestination(
-                viewStore.recentSessions[id: childViewStore.id].flatMap({ Sessions.State.Destination.sessionDetails(SessionDetails.State(session: $0.session)) })
-              )
-            }()
+            get: { CasePath.extract(/Sessions.State.Destination.sessionDetails)(from: $0.destination)?.session.id },
+            send: { Sessions.Action.setDestination(viewStore.recentSessions[id: childViewStore.id].flatMap({
+              Sessions.State.Destination.sessionDetails(.init(session: $0.session))
+            }))}()
           ),
           label: {
             SessionRowView(store: childStore)

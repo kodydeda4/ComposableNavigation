@@ -20,7 +20,7 @@ struct Home: ReducerProtocol {
       case sessions(Sessions.State)
     }
   }
-  
+
   enum Action: BindableAction, Equatable {
     case task
     case taskResponse(TaskResult<[LocalDatabaseClient.Session]>)

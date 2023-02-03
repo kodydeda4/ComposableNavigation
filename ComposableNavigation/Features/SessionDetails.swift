@@ -5,7 +5,6 @@ struct SessionDetails: ReducerProtocol {
   struct State: Equatable {
     var session: LocalDatabaseClient.Session
     var measurements = [LocalDatabaseClient.Measurement]()
-    @BindingState var search = String()
   }
   
   enum Action: BindableAction, Equatable {
@@ -66,10 +65,6 @@ struct SessionDetailsView: View {
         }
         .task { viewStore.send(.task) }
         .navigationTitle("\(viewStore.session.id.description)")
-        .searchable(
-          text: viewStore.binding(\.$search),
-          placement: .navigationBarDrawer(displayMode: .always)
-        )
       }
     }
   }
