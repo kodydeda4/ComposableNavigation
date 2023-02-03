@@ -57,7 +57,7 @@ struct SessionDetailsView: View {
     WithViewStore(store) { viewStore in
       NavigationStack {
         List {
-          ForEach(viewStore.measurements) { measurement in
+          ForEach(viewStore.measurements.sorted()) { measurement in
             Text(measurement.measurement.value.formattedDescription)
             +
             Text(" \(measurement.measurement.unit.symbol)")
@@ -86,13 +86,21 @@ private extension Double {
 // MARK: - SwiftUI Previews
 
 struct SessionDetailsView_Previews: PreviewProvider {
-  private static let sessionID = LocalDatabaseClient.Session.ID()
+  static let measurementID = LocalDatabaseClient.Measurement.ID(rawValue: .init(
+    uuidString: "00000000-0000-0000-0000-000000000001"
+  )!)
+  static let sessionID = LocalDatabaseClient.Session.ID(rawValue: .init(
+    uuidString: "00000000-0000-0000-0000-000000000000"
+  )!)
+
   static var previews: some View {
     SessionDetailsView(store: .init(
       initialState: SessionDetails.State(
         session: .init(
           id: sessionID,
-          measurementIDs: []
+          measurementIDs: [
+            measurementID
+          ]
         )
       ),
       reducer: SessionDetails()
