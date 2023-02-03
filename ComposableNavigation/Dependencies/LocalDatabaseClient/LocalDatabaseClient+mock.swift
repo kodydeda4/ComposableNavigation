@@ -40,25 +40,33 @@ private extension LocalDatabaseClient {
     }
 
     init() {
-      let measurementID = LocalDatabaseClient.Measurement.ID(rawValue: .init(
-        uuidString: "00000000-0000-0000-0000-000000000001"
-      )!)
       let sessionID = LocalDatabaseClient.Session.ID(rawValue: .init(
         uuidString: "00000000-0000-0000-0000-000000000000"
       )!)
       
       self.measurements = .init(uniqueElements: [
-        LocalDatabaseClient.Measurement(
-          id: measurementID,
+        .init(
+          id: .init(rawValue: .init(uuidString: "00000000-0000-0000-0000-000000000001")!),
           sessionID: sessionID,
           measurement: .init(
-            value: Double.random(in: 1..<100),
+            value: 50,
+            unit: .milesPerHour
+          )
+        ),
+        .init(
+          id: .init(rawValue: .init(uuidString: "00000000-0000-0000-0000-000000000002")!),
+          sessionID: sessionID,
+          measurement: .init(
+            value: 100,
             unit: .milesPerHour
           )
         )
       ])
       self.sessions = .init(uniqueElements: [
-        .init(id: sessionID, measurementIDs: measurements.map(\.id))
+        .init(
+          id: sessionID,
+          measurementIDs: measurements.map(\.id)
+        )
       ])
     }
   }
