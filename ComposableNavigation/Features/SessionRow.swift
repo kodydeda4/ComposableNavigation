@@ -80,48 +80,50 @@ struct SessionRowView: View {
           .background(Color(.systemGray4))
           .clipShape(Circle())
           
-        
         VStack(alignment: .leading, spacing: 2) {
           HStack {
-            Text("\(viewStore.id.rawValue.description.prefix(16).description)")
+            Text("\(viewStore.id.rawValue.description.prefix(12).description)")
               .lineLimit(1)
-              .font(.caption)
+              //.font(.subheadline)
               .bold()
             
             Spacer()
             
             Text("\(Date().formatted())")
               .lineLimit(1)
-              .font(.caption)
+              //.font(.subheadline)
               .foregroundColor(.secondary)
           }
           HStack {
-            VStack(alignment: .leading) {
+            VStack {
               Text("MAX (MPH)")
-                .font(.caption)
+                .font(.footnote)
                 .foregroundColor(.secondary)
               Text("\(viewStore.maxSpeed?.formattedDescription ?? "--")")
                 .foregroundColor(.accentColor)
-                .font(.caption)
+                //.font(.caption)
             }
-            Spacer()
-            VStack(alignment: .leading) {
+            .frame(maxWidth: .infinity)
+            
+            VStack {
               Text("AVG (MPH)")
-                .font(.caption)
+                .font(.footnote)
                 .foregroundColor(.secondary)
               Text("\(viewStore.avgSpeed?.formattedDescription ?? "--")")
                 .foregroundColor(.primary)
-                .font(.caption)
+                //.font(.caption)
             }
-            Spacer()
-            VStack(alignment: .leading) {
+            .frame(maxWidth: .infinity)
+            
+            VStack {
               Text("COUNT")
-                .font(.caption)
+                .font(.footnote)
                 .foregroundColor(.secondary)
               Text("\(viewStore.measurements.count)")
                 .foregroundColor(.primary)
-                .font(.caption)
+                //.font(.caption)
             }
+            .frame(maxWidth: .infinity)
           }
           
           //        Spacer()

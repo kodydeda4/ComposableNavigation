@@ -103,6 +103,16 @@ struct SessionsView: View {
         text: viewStore.binding(\.$search),
         placement: .navigationBarDrawer(displayMode: .always)
       )
+      .toolbar {
+        Menu {
+          Button(action: {}) {
+            Label("Select", systemImage: "checkmark.circle")
+          }
+        } label: {
+          Label("Menu", systemImage: "ellipsis.circle")
+        }
+
+      }
     }
   }
 }

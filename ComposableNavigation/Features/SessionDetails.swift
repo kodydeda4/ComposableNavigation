@@ -86,7 +86,7 @@ struct SessionDetailsView: View {
           }
         }
         .task { viewStore.send(.task) }
-        .navigationTitle("\(viewStore.session.id.rawValue.description.prefix(16).description)")
+        .navigationTitle("\(viewStore.session.id.rawValue.description.prefix(12).description)")
         .listStyle(.plain)
         .toolbar {
           Menu {
@@ -112,7 +112,7 @@ private struct Header: View {
           Text("MAX (MPH")
             .font(.subheadline)
             .foregroundColor(.secondary)
-          Text("\(viewStore.maxSpeed?.description ?? "--")")
+          Text("\(viewStore.maxSpeed?.formattedDescription ?? "--")")
             .foregroundColor(.accentColor)
             .font(.title2)
             .bold()
@@ -122,7 +122,7 @@ private struct Header: View {
           Text("AVG (MPH)")
             .font(.subheadline)
             .foregroundColor(.secondary)
-          Text("\(viewStore.avgSpeed?.description ?? "--")")
+          Text("\(viewStore.avgSpeed?.formattedDescription ?? "--")")
             .font(.title2)
             .bold()
         }
