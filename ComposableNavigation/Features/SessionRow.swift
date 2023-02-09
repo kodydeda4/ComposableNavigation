@@ -76,11 +76,12 @@ struct SessionRowView: View {
       HStack {
         
         Text("\(viewStore.measurements.count)")
-          .frame(width: 40, height: 40)
+          .frame(width: 50, height: 50)
           .background(Color(.systemGray4))
           .clipShape(Circle())
+          .padding(.trailing, 4)
           
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 6) {
           HStack {
             Text("\(viewStore.id.rawValue.description.prefix(12).description)")
               .lineLimit(1)
@@ -94,20 +95,33 @@ struct SessionRowView: View {
               //.font(.subheadline)
               .foregroundColor(.secondary)
           }
+//          Text("Kody Deda")
+//            .font(.footnote)
+//            .bold()
+//            .foregroundColor(.secondary)
+//          Text("Baseball Hitting")
+//            .font(.footnote)
+//            .bold()
+//            .foregroundColor(.secondary)
+          
           HStack {
             VStack {
               Text("MAX (MPH)")
                 .font(.footnote)
+                .bold()
                 .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
               Text("\(viewStore.maxSpeed?.formattedDescription ?? "--")")
                 .foregroundColor(.accentColor)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 //.font(.caption)
             }
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, alignment: .leading)
             
             VStack {
               Text("AVG (MPH)")
                 .font(.footnote)
+                .bold()
                 .foregroundColor(.secondary)
               Text("\(viewStore.avgSpeed?.formattedDescription ?? "--")")
                 .foregroundColor(.primary)
@@ -118,9 +132,12 @@ struct SessionRowView: View {
             VStack {
               Text("COUNT")
                 .font(.footnote)
+                .bold()
                 .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, alignment: .trailing)
               Text("\(viewStore.measurements.count)")
                 .foregroundColor(.primary)
+                .frame(maxWidth: .infinity, alignment: .trailing)
                 //.font(.caption)
             }
             .frame(maxWidth: .infinity)
