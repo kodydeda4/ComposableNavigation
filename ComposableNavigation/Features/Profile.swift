@@ -61,6 +61,7 @@ struct SmallProfileView: View {
       .background(Color(.systemGray4))
       .clipShape(Circle())
       .padding(.trailing, 4)
+      .task { viewStore.send(.task) }
     }
   }
 }

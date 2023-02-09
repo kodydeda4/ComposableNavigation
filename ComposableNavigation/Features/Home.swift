@@ -131,10 +131,7 @@ struct HomeView: View {
       NavigationStack {
         List {
           Section {
-            PlayersNavigationLink(store: store)
-            SportsNavigationLink(store: store)
-            ActivitiesNavigationLink(store: store)
-            SettingsNavigationLink(store: store)
+            NavigationLinks(store: store)
           }
           .font(.title3)
           
@@ -212,6 +209,19 @@ struct HomeView: View {
           }
         }
       }
+    }
+  }
+}
+
+private struct NavigationLinks: View {
+  let store: StoreOf<Home>
+  
+  var body: some View {
+    WithViewStore(store) { viewStore in
+      PlayersNavigationLink(store: store)
+      SportsNavigationLink(store: store)
+      ActivitiesNavigationLink(store: store)
+      SettingsNavigationLink(store: store)
     }
   }
 }
